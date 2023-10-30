@@ -12,4 +12,3 @@ template <typename RowType> class AccountingTable{
         }
     }
 };
-
