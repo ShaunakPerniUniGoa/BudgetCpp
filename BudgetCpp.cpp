@@ -1,14 +1,9 @@
-#include <vector>
-struct AccountingRow{
-    
-};
-template <typename RowType> class AccountingTable{
-    private:
-    std::vector<RowType> tableColumns;
-    public:
-    AccountingTable(RowType[] inputRows){
-        for(RowType a : inputRows){
-            tableColumns.insert(a);
-        }
-    }
-};
+#include "bcppTableObjects.h"
+
+int main(){
+
+    budgetCppTableObjects::AccountingTableObject<budgetCppTableObjects::accountingRow> IncomeTable;
+    budgetCppTableObjects::AccountingTableObject<budgetCppTableObjects::accountingRow> ExpenseTable;
+
+    return 0;
+}
