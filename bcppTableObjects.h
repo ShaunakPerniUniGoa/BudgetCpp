@@ -1,7 +1,17 @@
 #include <vector>
 #include <string>
+#include <ctime>
+#include "bcppTimeFunctionsLib.h"
 namespace budgetCppTableObjects
 {
+    enum timePreoid{
+        DAILY,
+        WEEKLY,
+        MONTHLY,
+        ANNUALLY
+    };
+
+
     struct accountingRow
     {
         /**
@@ -21,6 +31,12 @@ namespace budgetCppTableObjects
 
     public:
         AccountingTableObject() {}
+        /*
+         @brief CURD Functions
+        */
+        void insertRow(RowType newRow){
+            tableColumns.push_back(newRow);
+        }
     };
 
     template <typename RowType>
@@ -28,11 +44,39 @@ namespace budgetCppTableObjects
     {
     private:
         RowType accountDetails;
-        AccountingTableObject<RowType> &TableRef;
+        AccountingTableObject<RowType> &tableRef;
+        timePreoid automateAfter;
+        std::tm lastTrigger;
+
+        bool enabled;
+
+        void addNewAccount2RefTable()
+        {
+            tableRef.insertRow(accountDetails);
+        }
+
+        bool checkTriggerCondition()
+        {
+            return true;
+        }
 
     public:
-        AutomatedAccountingObject(AccountingTableObject<RowType> &table) : TableRef(table)
+        AutomatedAccountingObject(AccountingTableObject<RowType> &table) : tableRef(table)
         {
         }
+
+        void checkConditionAndTrigger()
+        {
+            bool conditionReturn = checkTriggerCondition();
+            conditionReturn?addNewAccount2RefTable(): false;
+            lastTrigger = BudgetCppTimeFunctions::getCurrentDate();
+        }
+    };
+
+    class saveDataObject{
+        private:
+
     };
 }
+
+
