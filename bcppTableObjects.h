@@ -4,20 +4,13 @@
 #include "bcppTimeFunctionsLib.h"
 namespace budgetCppTableObjects
 {
-    enum timePreoid{
-        DAILY,
-        WEEKLY,
-        MONTHLY,
-        ANNUALLY
-    };
-
 
     struct accountingRow
     {
         /**
          * @brief Row Structure for Accounting Table Object
          * @brief Contains the SrNo, Item Name and value in floating point
-        */
+         */
         int serialNumber;
         std::string itemName;
         float valueMoney;
@@ -34,7 +27,8 @@ namespace budgetCppTableObjects
         /*
          @brief CURD Functions
         */
-        void insertRow(RowType newRow){
+        void insertRow(RowType newRow)
+        {
             tableColumns.push_back(newRow);
         }
     };
@@ -45,7 +39,7 @@ namespace budgetCppTableObjects
     private:
         RowType accountDetails;
         AccountingTableObject<RowType> &tableRef;
-        timePreoid automateAfter;
+        BudgetCppTimeObjects::timePreoid automateAfter;
         std::tm lastTrigger;
 
         bool enabled;
@@ -68,15 +62,13 @@ namespace budgetCppTableObjects
         void checkConditionAndTrigger()
         {
             bool conditionReturn = checkTriggerCondition();
-            conditionReturn?addNewAccount2RefTable(): false;
+            conditionReturn ? addNewAccount2RefTable() : false;
             lastTrigger = BudgetCppTimeFunctions::getCurrentDate();
         }
     };
 
-    class saveDataObject{
-        private:
-
+    class saveDataObject
+    {
+    private:
     };
 }
-
-

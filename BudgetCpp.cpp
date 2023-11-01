@@ -7,7 +7,8 @@ budgetCppTableObjects::AccountingTableObject<budgetCppTableObjects::accountingRo
 std::vector<budgetCppTableObjects::AutomatedAccountingObject<budgetCppTableObjects::accountingRow>> automatedIncomeObjects;
 std::vector<budgetCppTableObjects::AutomatedAccountingObject<budgetCppTableObjects::accountingRow>> automatedExpensebjects;
 
-int main(){
+int main()
+{
 
     return 0;
 }
