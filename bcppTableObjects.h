@@ -39,19 +39,36 @@ namespace budgetCppTableObjects
     private:
         RowType accountDetails;
         AccountingTableObject<RowType> &tableRef;
-        BudgetCppTimeObjects::timePreoid automateAfter;
+        BudgetCppTimeObjects::timePreoid triggerAfter;
         std::tm lastTrigger;
-
         bool enabled;
+
+        struct conditonCheck
+        {
+            int loops;
+            bool valid;
+        };
 
         void addNewAccount2RefTable()
         {
             tableRef.insertRow(accountDetails);
         }
 
-        bool checkTriggerCondition()
+        conditonCheck checkTriggerCondition(std::tm currentDate)
         {
-            return true;
+            conditonCheck conditonCheckReturn;
+            switch (triggerAfter)
+            {
+            case BudgetCppTimeObjects::DAILY:
+
+                break;
+
+            default:
+                conditonCheckReturn.valid = false;
+                return conditonCheckReturn;
+            }
+            conditonCheckReturn.valid = false;
+            return conditonCheckReturn;
         }
 
     public:
@@ -59,11 +76,22 @@ namespace budgetCppTableObjects
         {
         }
 
-        void checkConditionAndTrigger()
+        void checkConditionAndTrigger(std::tm currentDate)
         {
-            bool conditionReturn = checkTriggerCondition();
-            conditionReturn ? addNewAccount2RefTable() : false;
-            lastTrigger = BudgetCppTimeFunctions::getCurrentDate();
+            if (enabled)
+            {
+                conditonCheck conditionCheckReturn = checkTriggerCondition(currentDate);
+                if (conditionCheckReturn.valid)
+                {
+                    int loops = conditionCheckReturn.loops;
+                    while (loops > 0)
+                    {
+                        addNewAccount2RefTable();
+                        loops--;
+                    }
+                }
+                lastTrigger = BudgetCppTimeFunctions::getCurrentDate();
+            }
         }
     };
 
