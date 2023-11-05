@@ -1,9 +1,9 @@
 #include "bcppTableObjectsLib.h"
-#include <vector>
-#include <string>
+#include "terminalFormatting.h"
 #include <iostream>
-#include <iomanip>
-#include <ctime>
+#include <cstdlib>
+
+
 
 namespace BudgetCppAppObjects
 {
@@ -76,9 +76,10 @@ int main()
 {
     using namespace BudgetCppAppFrontEnd;
     using namespace BudgetCppAppBackEnd;
-
+    char c;
     while(true){
-        
+        clearScreen();
+        std::cin;
     }
     
     return 0;
