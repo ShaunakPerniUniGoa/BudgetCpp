@@ -1,7 +1,6 @@
 # BudgetCpp
 
-![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
-
+<img src="https://raw.githubusercontent.com/isocpp/logos/master/cpp_logo.png" alt="C++ Logo" width="64" height="64" />
 C++ Based Budgeting App
 
 
