@@ -8,7 +8,7 @@ namespace BCPP_Package_Trigger
         template <typename Object>
         class Trigger
         {
-        private:
+        protected:
             Object *target;
 
         public:
@@ -21,9 +21,9 @@ namespace BCPP_Package_Trigger
         };
 
         template<typename Object, typename Data>
-        class DataCarryTrigger : private Trigger<Object>
+        class DataTrigger : protected Trigger<Object>
         {
-
+            
         };
 
 
