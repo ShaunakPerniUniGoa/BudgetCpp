@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <numeric>
-
+// Shaunak Perni 
 namespace budgetCppTableObjects
 {
     template <typename RowType>
@@ -176,8 +176,4 @@ namespace budgetCppTableObjects
         }
     };
 
-    class saveDataObject
-    {
-    private:
-    };
 }

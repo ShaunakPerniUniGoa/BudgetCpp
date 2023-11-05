@@ -1,4 +1,5 @@
 #include <iostream>
+namespace terminalFormatingColorcodes{
 const std::string ANSI_RESET = "\033[0m";
 const std::string ANSI_BLACK = "\033[30m";
 const std::string ANSI_RED = "\033[31m";
@@ -17,6 +18,7 @@ const std::string ANSI_BG_BLUE = "\033[44m";
 const std::string ANSI_BG_MAGENTA = "\033[45m";
 const std::string ANSI_BG_CYAN = "\033[46m";
 const std::string ANSI_BG_WHITE = "\033[47m";
+}
 
 void clearScreen()
 {
