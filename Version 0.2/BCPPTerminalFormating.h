@@ -1,4 +1,5 @@
 #include <string>
+#pragma once
 namespace terminalFormatingColorcodes
 {
     const std::string ANSI_RESET = "\033[0m";
@@ -23,7 +24,6 @@ namespace terminalFormatingColorcodes
 
 namespace terminalFunctions
 {
-    std::string clearScreenCommand; 
     #ifdef WINDOWS
     #define CLEARSCREENCOMMAND "cls"
     #else

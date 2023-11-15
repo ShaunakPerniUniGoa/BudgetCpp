@@ -1,18 +1,21 @@
 #include <vector>
 #include <string>
+#include <algorithm>
+#include <functional>
+#include <stdexcept>
 
 namespace BCPP_Package_VectorTable
 {
     template <typename columnsTypeStruct>
     class VectorTableInterface
     {
-        public:
-            virtual void pushRow(columnsTypeStruct row)= 0;
-            virtual columnsTypeStruct &returnRow(int indexKey)= 0;
-            virtual columnsTypeStruct &getTail() = 0;
-            virtual columnsTypeStruct &getHead() = 0;
-            virtual void updateRow(int indexKey, columnsTypeStruct row) = 0;
-            virtual void deleteRow(int indexKey)= 0;
+    public:
+        virtual void pushRow(columnsTypeStruct row) = 0;
+        virtual columnsTypeStruct &returnRow(int indexKey) = 0;
+        virtual columnsTypeStruct &getTail() = 0;
+        virtual columnsTypeStruct &getHead() = 0;
+        virtual void updateRow(int indexKey, columnsTypeStruct row) = 0;
+        virtual void deleteRow(int indexKey) = 0;
     };
 
     template <typename columnsTypeStruct>
@@ -30,7 +33,14 @@ namespace BCPP_Package_VectorTable
 
         columnsTypeStruct &returnRow(int indexKey)
         {
-            return vectorTable[indexKey];
+            try
+            {
+                return vectorTable.at(indexKey);
+            }
+            catch (const std::out_of_range &e)
+            {
+                return vectorTable.back();
+            }
         }
 
         columnsTypeStruct &getTail()
@@ -40,7 +50,12 @@ namespace BCPP_Package_VectorTable
 
         columnsTypeStruct &getHead()
         {
-            return vectorTable.begin();
+            return vectorTable[0];
+        }
+
+        int returnSize()
+        {
+            return vectorTable.size();
         }
 
         void updateRow(int indexKey, columnsTypeStruct row)
@@ -51,8 +66,10 @@ namespace BCPP_Package_VectorTable
 
         void deleteRow(int indexKey)
         {
-            indexKey > vectorTable.size() ? indexKey = vectorTable.size() - 1 : indexKey = indexKey;
-            vectorTable.erase(vectorTable.begin + indexKey);
+            if (indexKey >= 0 && indexKey < vectorTable.size())
+            {
+                vectorTable.erase(vectorTable.begin() + indexKey);
+            }
         }
 
         const std::vector<columnsTypeStruct> &returnAllRows()
@@ -64,11 +81,74 @@ namespace BCPP_Package_VectorTable
         MemberType sumMember(MemberSelector selector) const
         {
             MemberType total = MemberType{};
-            for (const columnsTypeStruct &row : vectorTable)
+            if (vectorTable.size() > 0)
             {
-                total += selector(row);
+                for (const columnsTypeStruct &row : vectorTable)
+                {
+                    total += selector(row);
+                }
+            }
+            else
+            {
+                total = 0;
             }
             return total;
+        }
+
+        void sortTableByMember(std::function<bool(const columnsTypeStruct &, const columnsTypeStruct &)> comparator)
+        {
+            std::sort(vectorTable.begin(), vectorTable.end(), comparator);
+        }
+
+        template <typename MemberSelector>
+        int findIndexByCustomKey(int keyValue, MemberSelector selector)
+        {
+            for (int i = 0; i < vectorTable.size(); ++i)
+            {
+                if (selector(vectorTable[i]) == keyValue)
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        std::vector<columnsTypeStruct> getRangeByIndex(int startIndex, int offset)
+        {
+            std::vector<columnsTypeStruct> range;
+
+            if (startIndex < 0 || startIndex >= vectorTable.size() || offset <= 0)
+            {
+                return range;
+            }
+
+            int endIndex = std::min(startIndex + offset, static_cast<int>(vectorTable.size()));
+
+            range.reserve(endIndex - startIndex);
+
+            for (int i = startIndex; i < endIndex; ++i)
+            {
+                range.push_back(vectorTable[i]);
+            }
+
+            return range;
+        }
+
+        template <typename MemberSelector>
+        bool swapRowsByPrimaryKey(int primaryKey1, int primaryKey2, MemberSelector serialNumberSelector)
+        {
+            int index1 = findIndexByCustomKey(primaryKey1, serialNumberSelector);
+            int index2 = findIndexByCustomKey(primaryKey2, serialNumberSelector);
+
+            if (index1 != -1 && index2 != -1)
+            {
+                std::swap(vectorTable[index1], vectorTable[index2]);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     };
 }
