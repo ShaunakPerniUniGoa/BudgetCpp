@@ -18,7 +18,7 @@ namespace BCPP_Package_TerminalUI
 
         void printHeaders(int selection, const std::vector<std::string> &Headers, std::string colorActive, std::string colorInactive)
         {
-            for (long unsigned int nHeader = 0; nHeader < Headers.size(); nHeader++)
+            for (int nHeader = 0; nHeader < Headers.size(); nHeader++)
             {
                 selection == nHeader ? std::cout << colorActive << Headers[nHeader] << terminalFormatingColorcodes::ANSI_RESET
                                                  << "\t"
@@ -46,6 +46,13 @@ namespace BCPP_Package_TerminalUI
         void resetMarker()
         {
             std::cout << terminalFormatingColorcodes::ANSI_RESET;
+        }
+    
+        template <typename ratedDataType>
+        void binaryColorFormatedValue(ratedDataType data,std::string colorAbove,std::string colorBelow, ratedDataType midPoint)
+        {
+            data >= midPoint ? std::cout<<colorAbove : std::cout<<colorBelow;
+            std::cout<<data<<terminalFormatingColorcodes::ANSI_RESET;
         }
     }
     namespace formattedPrompts
