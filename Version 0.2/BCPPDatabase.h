@@ -3,6 +3,7 @@
 #include "BCPPTerminalFormating.h"
 #include <string>
 #include <iostream>
+#include <memory>
 namespace BCPP_Database_Objects
 {
     namespace TableStructues
@@ -28,11 +29,11 @@ namespace BCPP_Database_Objects
 
             void printRow(const rowBankAccount &currentRow)
             {
-                std::cout<<currentRow.serialNumber<<"\t\t"
-                <<currentRow.payee<<"\t\t"
-                <<currentRow.valueDebit<<"\t\t"
-                <<currentRow.valueCredit<<"\t\t"
-                <<BCPP_Package_TimeLib::timeDataFormatter::returnFormatedDate(currentRow.date);
+                std::cout << currentRow.serialNumber << "\t\t"
+                          << currentRow.payee << "\t\t"
+                          << currentRow.valueDebit << "\t\t"
+                          << currentRow.valueCredit << "\t\t"
+                          << BCPP_Package_TimeLib::timeDataFormatter::returnFormatedDate(currentRow.date);
             }
         }
         namespace Accounts
@@ -41,17 +42,27 @@ namespace BCPP_Database_Objects
             struct RowAccounts
             {
                 int serialNumber;
-                BCPP_Package_VectorTable::VectorTable<rowStruct>* tableRef;
+                std::string accoutnName;
+                BCPP_Package_VectorTable::VectorTable<rowStruct> *tableRef;
                 float balance;
 
                 template <typename DebitSelector, typename CreditSelector>
                 void setBalance(DebitSelector debitSelector, CreditSelector creditSelector)
                 {
-                    auto debit = tableRef->sumMember(debitSelector);
-                    auto credit = tableRef->sumMember(creditSelector);
+                    auto debit = tableRef->template sumMember<float>(debitSelector);
+                    auto credit = tableRef->template sumMember<float>(creditSelector);
                     this->balance = credit - debit;
                 }
             };
+
+            template <typename rowStruct>
+            void printRow(const RowAccounts<rowStruct> &row)
+            {
+                std::cout<<
+                row.serialNumber<<"\t\t"<<
+                row.accoutnName<<"\t\t"<<
+                row.balance;
+            }
         }
     }
 }
@@ -66,15 +77,13 @@ namespace BCPP_Database_Schema
 {
     namespace Tables
     {
-        BankTable BankAccountTable;
-        BankTable *BankTablePtr = &BankAccountTable;
-        std::vector<BankTable> storageVectorBankTable;
+        BankAccountsTable AccountsTable;
+        BankAccountsTable* AccountsTablePtr = &
     }
-
 
 }
 
-//DEPRICIATED
+// DEPRICIATED
 /*namespace BCPP_Interface
 {
     namespace dataManipulation
@@ -143,6 +152,21 @@ namespace BCPP_Database_Interface
 {
     namespace tabelObjectCreation
     {
-        
+        void createNewBankTable(std::string accountName)
+        {
+            auto tablePtr = std::make_unique<BCPP_Package_VectorTable::VectorTable<BankAccountRow>>();
+            AccountRow newRow = {1, accountName,tablePtr.get(), 0};
+            newRow.setBalance(
+                BCPP_Database_Objects::TableStructues::BankAccount::valueDebitSelector,
+                BCPP_Database_Objects::TableStructues::BankAccount::valueCreditSelector);
+            BCPP_Database_Schema::Tables::AccountsTable.pushRow(newRow);
+        }
+
+        auto returnBankTablePointer(int indexVal)
+        {
+            BCPP_Database_Schema::Tables::AccountsTable.
+        }
+
+
     }
 }
