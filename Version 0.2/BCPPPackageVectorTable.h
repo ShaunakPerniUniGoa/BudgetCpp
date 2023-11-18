@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <functional>
 #include <stdexcept>
+#include <iostream>
 
 namespace BCPP_Package_VectorTable
 {
@@ -56,6 +57,11 @@ namespace BCPP_Package_VectorTable
         int returnSize()
         {
             return vectorTable.size();
+        }
+
+        bool isEmpty()
+        {
+            return vectorTable.empty();
         }
 
         void updateRow(int indexKey, columnsTypeStruct row)
@@ -149,6 +155,30 @@ namespace BCPP_Package_VectorTable
             {
                 return false;
             }
+        }
+
+        template <typename MemberSelector>
+        typename MemberSelector::result_type getLastPrimaryKeyValue(MemberSelector selector) const
+        {
+            if (vectorTable.empty())
+            {
+                return MemberSelector::result_type();
+            }
+
+            auto comparator = [&selector](const columnsTypeStruct &a, const columnsTypeStruct &b)
+            {
+                return selector(a) < selector(b);
+            };
+
+            std::sort(vectorTable.begin(), vectorTable.end(), comparator);
+
+            // The last element will have the maximum primary key value
+            return selector(vectorTable.back());
+        }
+
+        int rowCount() const
+        {
+            return vectorTable.size();
         }
     };
 }

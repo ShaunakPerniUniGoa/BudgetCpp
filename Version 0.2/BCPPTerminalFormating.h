@@ -34,3 +34,8 @@ namespace terminalFunctions
         std::system(CLEARSCREENCOMMAND);
     }
 }
+
+namespace terminalFormatingMisc
+{
+    const std::string spacer = "        ";
+}
