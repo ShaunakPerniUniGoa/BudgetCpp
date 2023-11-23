@@ -61,6 +61,8 @@ namespace BCPP_Database_Objects
                 }
             };
 
+            const std::string RowHeaders = "Sr.\t\tName\t\t\tBalance";
+
             template <typename rowStruct>
             void printRow(const RowAccounts<rowStruct> &row)
             {
@@ -176,6 +178,12 @@ namespace BCPP_Database_Interface
             {
                 return BCPP_Database_Schema::Tables::AccountsTable.returnRow(indexVal);
             }
+
+            auto returnAllAccounts()
+            {
+                return BCPP_Database_Schema::Tables::AccountsTablePtr->returnAllRows();
+            }
+
         }
     }
     namespace BankTableInterface
@@ -183,7 +191,8 @@ namespace BCPP_Database_Interface
         void pushNewAccountingRow(BankTable *tableRef, std::string payee, float debit, float credit)
         {
             int lastSerial = tableRef->returnSize();
-            tableRef->pushRow({lastSerial, payee, debit, credit, BCPP_Package_TimeLib::TimeCalculationFunctions::getCurrentDate()});
+            std::tm currentTime = BCPP_Package_TimeLib::TimeCalculationFunctions::getCurrentDate();
+            tableRef->pushRow({lastSerial, payee, debit, credit, currentTime});
         }
 
         auto returnAllTableRows(BankTable *tableRef)

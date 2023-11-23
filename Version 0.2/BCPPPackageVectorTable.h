@@ -4,6 +4,7 @@
 #include <functional>
 #include <stdexcept>
 #include <iostream>
+#include <fstream>
 
 namespace BCPP_Package_VectorTable
 {
@@ -78,10 +79,12 @@ namespace BCPP_Package_VectorTable
             }
         }
 
-        const std::vector<columnsTypeStruct> &returnAllRows()
+        const std::vector<columnsTypeStruct>& returnAllRows()
         {
             return vectorTable;
         }
+
+        
 
         template <typename MemberType, typename MemberSelector>
         MemberType sumMember(MemberSelector selector) const
@@ -179,6 +182,11 @@ namespace BCPP_Package_VectorTable
         int rowCount() const
         {
             return vectorTable.size();
+        }
+    
+        void loadVector(const std::vector<columnsTypeStruct>& data)
+        {
+            vectorTable = data;
         }
     };
 }
