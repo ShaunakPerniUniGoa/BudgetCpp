@@ -22,7 +22,6 @@ void bankTablePrint(BankTable *tableRef)
         std::cout << "\n";
     }
 }
-
 void accountTablePrint()
 {
     std::cout<<BCPP_Database_Objects::TableStructues::Accounts::RowHeaders<<"\n";
@@ -46,7 +45,6 @@ void inputNewBankTableRow(BankTable *tableRef)
     credit = BCPP_Package_TerminalUI::formattedPrompts::customPrompt<float>("$:", "Enter Credit Amount");
     BCPP_Database_Interface::BankTableInterface::pushNewAccountingRow(tableRef, payee, debit, credit);
 }
-
 void inputAccount()
 {
     std::string AccountName = BCPP_Package_TerminalUI::formattedPrompts::customPrompt<std::string>("Enter Acccount Name%:");
