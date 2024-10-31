@@ -7,3 +7,6 @@
 [submodule "TimeAppliedFuncLib"]
 	path = include/TimeAppliedFuncLib
 	url = https://github.com/ShaunakPerni/TimeAppliedFuncLib
+[submodule "include/TimeAppliedFuncLib"]
+	path = include/TimeAppliedFuncLib
+	url = https://github.com/ShaunakPerni/TimeAppliedFuncLib
