@@ -1,3 +1,6 @@
 [submodule "TerminalUI"]
 	path = TerminalUI
 	url = https://github.com/ShaunakPerni/TerminalUI
+[submodule "VectorTables"]
+	path = VectorTables
+	url = https://github.com/ShaunakPerni/VectorTables
