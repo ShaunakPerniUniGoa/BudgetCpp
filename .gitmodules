@@ -4,3 +4,6 @@
 [submodule "VectorTables"]
 	path = include/VectorTables
 	url = https://github.com/ShaunakPerni/VectorTables
+[submodule "TimeAppliedFuncLib"]
+	path = include/TimeAppliedFuncLib
+	url = https://github.com/ShaunakPerni/TimeAppliedFuncLib
