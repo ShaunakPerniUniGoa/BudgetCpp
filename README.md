@@ -5,7 +5,4 @@
 #C++ Based Personal Budgeting App prototype
 
 Includes
-* Vector Based DataTable 
-* Terminal UI Library
 * Database implimentation using VectorTable
-* An Implimented Demo Program using all libraries

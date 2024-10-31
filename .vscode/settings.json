@@ -104,6 +104,12 @@
     "iomanip": "cpp",
     "iostream": "cpp",
     "istream": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "charconv": "cpp",
+    "format": "cpp",
+    "fstream": "cpp",
+    "span": "cpp",
+    "text_encoding": "cpp",
+    "variant": "cpp"
   }
 }
