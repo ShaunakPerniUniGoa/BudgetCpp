@@ -3,14 +3,17 @@
 
 #include "vectorTables.h"
 #include "timeAppliedFuncLib.h"
+#include <memory>
 
 namespace BudgetCPP
 {
     namespace defines
     {
         typedef float price;
-        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::BankStatement::structure::rowBankStatement> BankStatementTable;
-        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::Accounts::structure::rowAccounts> AccountsTable;
+        typedef Backend::Database::Schema::BankStatement::structure::rowBankStatement AccountStatement;
+        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::BankStatement::structure::rowBankStatement> AccountStatementTable;
+        typedef Backend::Database::Schema::Accounts::structure::rowAccounts BankAccountEntry;
+        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::Accounts::structure::rowAccounts> BankAccountsTable;
     }
     namespace Backend
     {
@@ -106,6 +109,20 @@ namespace BudgetCPP
                         }
                     }
                 }
+            }
+            namespace Tables
+            {
+                defines::BankAccountsTable MyBankAccountsTable;
+                defines::BankAccountsTable* ptrMyBankAccountsTable = &MyBankAccountsTable;
+                std::unique_ptr<defines::AccountStatementTable> ptrAccountStatementTable;
+            }
+            namespace Interface
+            {
+                void createNewBankStatementTable()
+                {
+                    Tables::ptrAccountStatementTable = std::make_unique<Package_VectorTable::VectorTable<defines::AccountStatement>>();
+                }
+
             }
         }
     }
