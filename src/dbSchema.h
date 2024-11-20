@@ -1,8 +1,8 @@
 #ifndef DBSCHEMA_H
 #define DBSCHEMA_H
 
-#include "vectorTables.h"
-#include "timeAppliedFuncLib.h"
+#include "../include/VectorTables/src/vectorTables.h"
+#include "../include/TimeAppliedFuncLib/src/timeAppliedFuncLib.h"
 #include <memory>
 
 namespace BudgetCPP
@@ -10,10 +10,6 @@ namespace BudgetCPP
     namespace defines
     {
         typedef float price;
-        typedef Backend::Database::Schema::BankStatement::structure::rowBankStatement AccountStatement;
-        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::BankStatement::structure::rowBankStatement> AccountStatementTable;
-        typedef Backend::Database::Schema::Accounts::structure::rowAccounts BankAccountEntry;
-        typedef Package_VectorTable::VectorTable<Backend::Database::Schema::Accounts::structure::rowAccounts> BankAccountsTable;
     }
     namespace Backend
     {
@@ -22,11 +18,11 @@ namespace BudgetCPP
             namespace Schema
             {
                 using namespace defines;
-                namespace BankStatement
+                namespace TransactionRecord
                 {
                     namespace structure
                     {
-                        struct rowBankStatement
+                        struct rowTransactionRecord
                         {
                             int serialNumber;
                             std::string payee;
@@ -39,18 +35,18 @@ namespace BudgetCPP
                     namespace selectors
                     {
                         using namespace structure;
-                        auto selectionSerialNumber = [](const rowBankStatement &row){ return row.serialNumber; };
-                        auto selectionPayee = [](const rowBankStatement &row){ return row.payee; };
-                        auto selectionValueDebit = [](const rowBankStatement &row){ return row.valueDebit; };
-                        auto selectionValueCredit = [](const rowBankStatement &row){ return row.valueCredit; };
-                        auto selectionDate = [](const rowBankStatement &row){ return row.date; };
+                        auto selectionSerialNumber = [](const rowTransactionRecord &row){ return row.serialNumber; };
+                        auto selectionPayee = [](const rowTransactionRecord &row){ return row.payee; };
+                        auto selectionValueDebit = [](const rowTransactionRecord &row){ return row.valueDebit; };
+                        auto selectionValueCredit = [](const rowTransactionRecord &row){ return row.valueCredit; };
+                        auto selectionDate = [](const rowTransactionRecord &row){ return row.date; };
                     }
                     namespace printFormatter
                     {
                         using namespace structure;
                         std::string HeaderString = "Serial Number\tPayee\t\tValue Debit\tValue Credit\tDate\n";
 
-                        std::string returnDataRow(const rowBankStatement &inputRow)
+                        std::string returnDataRow(const rowTransactionRecord &inputRow)
                         {
                             std::ostringstream stringStream;
                             stringStream << inputRow.serialNumber << "\t\t"
@@ -62,15 +58,15 @@ namespace BudgetCPP
                         }
                     }
                 }
-                namespace Accounts
+                namespace AccountRecord
                 {
                     namespace structure
                     {
-                        struct rowAccounts
+                        struct rowAccountRecord
                         {
                             int serialNumber;
                             std::string accountName;
-                            Package_VectorTable::VectorTable<BankStatement::structure::rowBankStatement> *bankStatementTableRef;
+                            Package_VectorTable::VectorTable<TransactionRecord::structure::rowTransactionRecord> *TransactionRecordTableRef;
                             price balance;
                         };
 
@@ -78,26 +74,17 @@ namespace BudgetCPP
                     namespace selectors
                     {
                         using namespace structure;
-                        auto selectorSerialNumber = [](const rowAccounts &row){ return row.serialNumber; };
-                        auto selectorAccountName = [](const rowAccounts &row){ return row.accountName; };
-                        auto selectorBalance = [](const rowAccounts &row){ return row.balance; };
-                        auto selectorBankStatementTableRef = [](const rowAccounts &row){ return row.bankStatementTableRef; };
-
-                        template <typename DebitSelectorType, typename CreditSelectorType>
-                        void calculateBalance(DebitSelectorType debitSelector, CreditSelectorType creditSelector)
-                        {
-                            const auto debit = tableRef->template sumMember<float>(debitSelector);
-                            const auto credit = tableRef->template sumMember<float>(creditSelector);
-                            balance = credit - debit;
-                        }
-
-                        }
+                        auto selectorSerialNumber = [](const rowAccountRecord &row){ return row.serialNumber; };
+                        auto selectorAccountName = [](const rowAccountRecord &row){ return row.accountName; };
+                        auto selectorBalance = [](const rowAccountRecord &row){ return row.balance; };
+                        auto selectorBankStatementTableRef = [](const rowAccountRecord &row){ return row.TransactionRecordTableRef; };
+                    }
                     namespace printFormatter
                     {
                         using namespace structure;
                         std::string HeaderString = "Serial Number\tPayee\t\tValue Debit\tValue Credit\tDate\n";
 
-                        std::string returnDataRow(const BankStatement::structure::rowBankStatement &inputRow)
+                        std::string returnDataRow(const TransactionRecord::structure::rowTransactionRecord &inputRow)
                         {
                             std::ostringstream stringStream;
                             stringStream << inputRow.serialNumber << "\t\t"
@@ -112,16 +99,17 @@ namespace BudgetCPP
             }
             namespace Tables
             {
-                defines::BankAccountsTable MyBankAccountsTable;
-                defines::BankAccountsTable* ptrMyBankAccountsTable = &MyBankAccountsTable;
-                std::unique_ptr<defines::AccountStatementTable> ptrAccountStatementTable;
+                Package_VectorTable::VectorTable<Schema::AccountRecord::structure::rowAccountRecord> TableOfBankAccounts;
+                Package_VectorTable::VectorTable<Schema::AccountRecord::structure::rowAccountRecord>* TableOfBankAccountsRef = &TableOfBankAccounts;
+            }
+            namespace Inits
+            {
+                Package_VectorTable::VectorTable<Schema::TransactionRecord::structure::rowTransactionRecord> newTransactionRecordTable;
+                Schema::TransactionRecord::structure::rowTransactionRecord newTransactionRecord = {1, "Initial Transaction", 0, 100, std::tm{}};
+                Schema::AccountRecord::structure::rowAccountRecord newAccountRecord = {1, "New Account", &newTransactionRecordTable, 0};
             }
             namespace Interface
             {
-                void createNewBankStatementTable()
-                {
-                    Tables::ptrAccountStatementTable = std::make_unique<Package_VectorTable::VectorTable<defines::AccountStatement>>();
-                }
 
             }
         }
